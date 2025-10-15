@@ -43,8 +43,6 @@ class Explosion{
     }
 }
 
-    
-
 window.addEventListener('click', function(e){
     createAnimation(e);
 });
@@ -54,11 +52,15 @@ function createAnimation(e){
     explosion.push(new Explosion(positionX, positionY));
 }
 function animate(){
+    let i;
     ctx.clearRect(0,0,canvas.width, canvas.height);
-    for (let i = 0; i < explosion.length; i++){
+    for ( i = 0; i < explosion.length; i++){
         explosion[i].update();
-        explosion[i].draw();}
+        explosion[i].draw();
+    }
+
         requestAnimationFrame(animate);
+
         if (explosion[i].frame > 5){
             explosion.splice(i, 1);
          i--;
