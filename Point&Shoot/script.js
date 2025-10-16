@@ -3,6 +3,9 @@ window.addEventListener('load', function () {
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    let timeToNextRaven = 0;
+    let ravenInterval = 500; //In milliseconds
+    let lastTime = 0;
 
     let ravens = [];
 
@@ -14,33 +17,33 @@ window.addEventListener('load', function () {
             this.y = Math.random() * (canvas.height - this.height);
             this.directionX = Math.random() * 5 + 3;
             this.directionY = Math.random() * 5 - 2.5;
+            this.markedForDeletion = false;
+            this.image.src = 'images/raven.png';
         }
         update() {
             this.x -= this.directionX;
-            this.y += this.directionY;
+            if (this.x < 0 - this.width) this.markedForDeletion = true;
         }
         draw() {
             ctx.fillRect(this.x, this.y, this.width, this.height);
         }
     }
 
-    // add at least one raven (or spawn them over time)
-    ravens.push(new Raven());
-
     function animate(timestamp) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // update & draw each raven
-        for (let i = ravens.length - 1; i >= 0; i--) {
-            const r = ravens[i];
-            r.update();
-            r.draw();
-            // remove when off-screen (optional)
-            if (r.x + r.width < 0) ravens.splice(i, 1);
+        let deltatime = timestamp - lastTime;
+        lastTime = timestamp;
+        timeToNextRaven += deltatime;
+        if (timeToNextRaven > ravenInterval) {
+            ravens.push(new Raven());
+            timeToNextRaven = 0;
         }
+        [...ravens].forEach(object => object.update());
+        [...ravens].forEach(object => object.draw());
+        ravens - ravens.fileter(object => !object.markedForDeletion)
 
         requestAnimationFrame(animate);
     }
 
-    requestAnimationFrame(animate);
-})
+    animate(0);
+});
