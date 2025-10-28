@@ -1,6 +1,7 @@
 // -=> playerStates.js
 import { Dust , Fire , Splash } from "./Particles.js";
-// Identifying states in form of -enums.
+
+// Identificatie van staten in de vorm van enums.
 const states = {
   SITTING: 0,
   RUNNING: 1,
@@ -11,55 +12,56 @@ const states = {
   HIT: 6,
 };
 
-// Parent State class
+// Parent State klasse die een algemene spelerstaat representeert
 class State {
+  // Initialiseer de staat met een naam en referentie naar het spel
   constructor(state, game) {
     this.state = state;
     this.game = game;
   }
 }
 
-//  sitting sub class -sit
+//  Sitting subklasse - zit
 export class Sitting extends State {
   constructor(game) {
     super("SITTING", game);
   }
 
-  // perform specific actions when we enter this state
+  // Stel de animatie en frames van de speler in bij het betreden van de zittende staat
   enter() {
     this.game.player.frameX = 0;
     this.game.player.frameY = 5;
     this.game.player.maxFrame = 4;
   }
 
-  // handeling limited number of inputs while we're in this state.
+  // Verwerk invoer van de speler terwijl hij zit
   HandleInput(input) {
     if (input.includes("q") || input.includes("d")) {
-      this.game.player.setState(states.RUNNING, 1); // Moving to the Running state after hitting right of left.
+      this.game.player.setState(states.RUNNING, 1); // Overgang naar de Ren-staat
     } else if (input.includes("z")) {
-      this.game.player.setState(states.JUMPING, 1);
+      this.game.player.setState(states.JUMPING, 1); // Overgang naar Springen
     } else if (input.includes(" ")) {
-      this.game.player.setState(states.ROLLING, 2);
+      this.game.player.setState(states.ROLLING, 2); // Overgang naar Rollen
     }
   }
 }
 
-//  Running sub class -run
+//  Running subklasse - ren
 export class Running extends State {
   constructor(game) {
     super("RUNNING", game);
   }
 
-  // perform specific actions when we enter this state
+  // Stel de animatie en frames van de speler in bij het betreden van de rennende staat
   enter() {
     this.game.player.frameX = 0;
     this.game.player.frameY = 3;
     this.game.player.maxFrame = 8;
   }
 
-  // handeling limited number of inputs while we're in this state.
+  // Verwerk invoer van de speler tijdens het rennen en voeg stofdeeltjes toe
   HandleInput(input) {
-    // adding particles of running.
+    // Voeg stofdeeltjes toe tijdens het rennen
     this.game.particles.unshift(
       new Dust(
         this.game,
@@ -68,89 +70,89 @@ export class Running extends State {
       )
     );
 
-    // handinginput.
+    // Verwerk inputovergangen
     if (input.includes("z")) {
-      this.game.player.setState(states.JUMPING, 1); // Moving to jumping state.
+      this.game.player.setState(states.JUMPING, 1); // Overgang naar Springen
     } else if (
       input.includes("s") &&
       !(input.includes("q") || input.includes("d"))
     ) {
-      this.game.player.setState(states.SITTING, 0);
+      this.game.player.setState(states.SITTING, 0); // Overgang naar Zitten
     } else if (input.includes(" ")) {
-      this.game.player.setState(states.ROLLING, 2);
+      this.game.player.setState(states.ROLLING, 2); // Overgang naar Rollen
     }
   }
 }
 
-// Jumping sub class -jum
+// Jumping subklasse - sprong
 export class Jumping extends State {
   constructor(game) {
     super("JUMPING", game);
   }
 
-  // perform specific actions when we enter this state
+  // Stel animatie, frames en initiële verticale snelheid in bij springen
   enter() {
     if (this.game.player.isOnGround()) {
-      this.game.player.vy = -25; // Set initial velocity when jumping from the ground
+      this.game.player.vy = -25; // Spring van de grond
     }
     this.game.player.frameX = 0;
     this.game.player.frameY = 1;
     this.game.player.maxFrame = 6;
   }
 
-  // handling limited number of inputs while we're in this state.
+  // Verwerk invoer van de speler tijdens het springen
   HandleInput(input) {
     if (this.game.player.vy >= 0) {
-      this.game.player.setState(states.FALLING, 1); // Moving to the Falling state when the game.player starts descending
+      this.game.player.setState(states.FALLING, 1); // Overgang naar Vallen bij dalen
     } else if (input.includes(" ")) {
-      this.game.player.setState(states.ROLLING, 2);
+      this.game.player.setState(states.ROLLING, 2); // Overgang naar Rollen in de lucht
     } else if (input.includes("s")) {
-      this.game.player.setState(states.DIVING, 0);
+      this.game.player.setState(states.DIVING, 0); // Overgang naar Duiken
     }
   }
 }
 
-//  Falling sub class -fal
+//  Falling subklasse - val
 export class Falling extends State {
   constructor(game) {
     super("FALLING", game);
   }
 
-  // perform specific actions when we enter this state
+  // Stel animatie en frames in voor de vallende staat
   enter() {
     this.game.player.frameX = 0;
     this.game.player.frameY = 2;
     this.game.player.maxFrame = 6;
   }
 
-  // handeling limited number of inputs while we're in this state.
+  // Verwerk invoer van de speler tijdens het vallen
   HandleInput(input) {
     if (this.game.player.isOnGround()) {
-      this.game.player.setState(states.RUNNING, 1); // Moving to the Runing state.
+      this.game.player.setState(states.RUNNING, 1); // Overgang naar Rennen bij landing
     } else if (input.includes(" ")) {
-      this.game.player.setState(states.ROLLING, 2);
+      this.game.player.setState(states.ROLLING, 2); // Overgang naar Rollen in de lucht
     } else if (input.includes("s")) {
-      this.game.player.setState(states.DIVING, 0);
+      this.game.player.setState(states.DIVING, 0); // Overgang naar Duiken
     }
   }
 }
 
-//  Rolling sub class -rol
+//  Rolling subklasse - rol
 export class Rolling extends State {
   constructor(game) {
     super("ROLLING", game);
   }
 
-  // perform specific actions when we enter this state
+  // Stel animatie en frames in voor de rollende staat
   enter() {
     this.game.player.frameX = 0;
     this.game.player.frameY = 6;
     this.game.player.maxFrame = 6;
   }
 
-  // handeling limited number of inputs while we're in this state.
+  // Verwerk invoer van de speler tijdens het rollen en voeg vuurdeeltjes toe
   HandleInput(input) {
-    // adding particles of Rolling.
+    // Voeg vuurdeeltjes toe voor rollende effect
     this.game.particles.unshift(
       new Fire(
         this.game,
@@ -158,7 +160,8 @@ export class Rolling extends State {
         this.game.player.y + this.game.player.height / 2
       )
     );
-    // handing input.
+
+    // Verwerk overgang op basis van invoer en grondstatus
     if (!input.includes(" ") && this.game.player.isOnGround()) {
       this.game.player.setState(states.RUNNING, 1);
     } else if (!input.includes(" ") && !this.game.player.isOnGround()) {
@@ -168,30 +171,30 @@ export class Rolling extends State {
       input.includes("z") &&
       this.game.player.isOnGround()
     ) {
-      this.game.player.vy -= 25;
+      this.game.player.vy -= 25; // Hogere sprong tijdens rollen
     } else if (input.includes("s") && !this.game.player.isOnGround()) {
-      this.game.player.setState(states.DIVING, 0);
+      this.game.player.setState(states.DIVING, 0); // Duik vanuit de lucht
     }
   }
 }
 
-//  Diving state  -div
+//  Diving staat - duik
 export class Diving extends State {
   constructor(game) {
     super("DIVING", game);
   }
 
-  // perform specific actions when we enter this state
+  // Stel animatie, frames en neerwaartse snelheid in voor duiken
   enter() {
     this.game.player.frameX = 0;
     this.game.player.frameY = 6;
     this.game.player.maxFrame = 6;
-    this.game.player.vy = 20;
+    this.game.player.vy = 20; // Val naar beneden
   }
 
-  // handeling limited number of inputs while we're in this state.
+  // Verwerk invoer tijdens duiken en voeg vuur/splashdeeltjes toe
   HandleInput(input) {
-    // adding particles of dIVING.
+    // Voeg vuurdeeltjes toe voor duikeffect
     this.game.particles.unshift(
       new Fire(
         this.game,
@@ -199,11 +202,19 @@ export class Diving extends State {
         this.game.player.y + this.game.player.height / 2
       )
     );
-    // handing input.
+
+    // Overgang na landing of doorgaan met rollen in de lucht
     if (this.game.player.isOnGround()) {
       this.game.player.setState(states.RUNNING, 1);
-      for(let i = 0 ; i < 30 ; i++) {
-          this.game.particles.unshift(new Splash(this.game , this.game.player.x + this.game.player.width * .7, this.game.player.y + this.game.player.height))
+      // Voeg splashdeeltjes toe bij landing
+      for (let i = 0; i < 30; i++) {
+        this.game.particles.unshift(
+          new Splash(
+            this.game,
+            this.game.player.x + this.game.player.width * 0.7,
+            this.game.player.y + this.game.player.height
+          )
+        );
       }
     } else if (input.includes(" ") && !this.game.player.isOnGround()) {
       this.game.player.setState(states.ROLLING, 2);
@@ -211,28 +222,26 @@ export class Diving extends State {
   }
 }
 
-//  Hit state  -hit
+//  Hit staat - geraakt
 export class Hit extends State {
   constructor(game) {
     super("HIT", game);
   }
 
-  // perform specific actions when we enter this state
+  // Stel animatie, frames en verticale terugslag in bij geraakt worden
   enter() {
     this.game.player.frameX = 0;
     this.game.player.frameY = 4;
     this.game.player.maxFrame = 10;
-    this.game.player.vy = -10;
+    this.game.player.vy = -10; // Terugslag effect
   }
 
-  // handeling limited number of inputs while we're in this state.
+  // Verwerk invoer na geraakt worden om overgang te bepalen wanneer animatie eindigt
   HandleInput(input) {
-    // handing input.
-    if ( this.game.player.frameX >= 10 && this.game.player.isOnGround()) {
-      this.game.player.setState(states.RUNNING, 1);
+    if (this.game.player.frameX >= 10 && this.game.player.isOnGround()) {
+      this.game.player.setState(states.RUNNING, 1); // Overgang naar Rennen
     } else if (this.game.player.frameX >= 10 && !this.game.player.isOnGround()) {
-      this.game.player.setState(states.FALLING, 1);
+      this.game.player.setState(states.FALLING, 1); // Overgang naar Vallen
     }
   }
 }
-
