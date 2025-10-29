@@ -1,5 +1,5 @@
 // -=> playerStates.js
-import { Dust , Fire , Splash } from "./Particles.js";
+import { Dust , Fire , Splash } from "./particles.js";
 
 // Dit zijn de verschillende toestanden van de speler
 const states = {
