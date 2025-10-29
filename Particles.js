@@ -1,6 +1,6 @@
 // => Particles.js
 
-// -particle
+// -Particle
 class Particle {
   constructor(game) {
     this.game = game;
