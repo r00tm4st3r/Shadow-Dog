@@ -46,7 +46,7 @@ export class Player {
     // controlling horizental mouvment based on the keyboard inputs.
     this.x += this.speed;
     if (input.includes("d") && this.currentState !== this.states[6]) this.speed = this.maxSpeed;
-    else if (input.includes("q") && this.currentState !== this.states[6]) this.speed = -this.maxSpeed;
+    else if (input.includes("a") && this.currentState !== this.states[6]) this.speed = -this.maxSpeed;
     else if (input.includes(" "));
     else this.speed = 0;
     // horizental boundaries

@@ -9,8 +9,8 @@ export class InputHnadler {
       if (
         (e.key === "s" ||
           e.key === "d" ||
-          e.key === "q" ||
-          e.key === "z" ||
+          e.key === "a" ||
+          e.key === "w" ||
           e.key === " ") &&
         this.keys.indexOf(e.key) === -1
       ) {
@@ -28,8 +28,8 @@ export class InputHnadler {
       if (
         e.key === "s" ||
         e.key === "d" ||
-        e.key === "q" ||
-        e.key === "z" ||
+        e.key === "a" ||
+        e.key === "w" ||
         e.key === " "
       ) {
         this.keys.splice(this.keys.indexOf(e.key), 1);

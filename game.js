@@ -1,8 +1,8 @@
 // => game.js
-import { Player } from "./player.js";
+import { Player } from "./Player.js";
 import { InputHnadler } from "./input.js";
 import { Background } from "./background.js";
-import { FlyingEnemy, ClimbingEnemy, GroundEnemy } from "./enemies.js/index.js";
+import { FlyingEnemy, ClimbingEnemy, GroundEnemy } from "./enemies.Js";
 import { UI } from "./UI.js";
 import { collisionAnimation } from "./collisionAnimation.js";
 

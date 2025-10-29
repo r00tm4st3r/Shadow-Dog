@@ -13,7 +13,7 @@ class Enemy {
 
     // -enu
     update(deltaTime) {
-        // mouvement
+        // movement
         this.x -= this.speedX + this.game.speed;
         this.y += this.speedY;
         if (this.frameTimer > this.frameInterval) {
